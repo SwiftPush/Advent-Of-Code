@@ -1,0 +1,6 @@
+[package]
+name = "corruption-checksum"
+version = "0.1.0"
+authors = ["Andy Provan <AndyProvan@gmail.com>"]
+
+[dependencies]
