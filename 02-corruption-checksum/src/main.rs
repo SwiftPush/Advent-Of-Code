@@ -6,10 +6,19 @@ fn example1() {
         vec![5, 1, 9, 5],
         vec![7, 5, 3   ],
         vec![2, 4, 6, 8]];
-    assert_eq!(calculate_checksum(spreadsheet), 18);
+    assert_eq!(calculate_checksum_part1(spreadsheet), 18);
 }
 
-fn calculate_checksum(spreadsheet: Vec<Vec<u32>>) -> u32 {
+#[test]
+fn example2() {
+    let spreadsheet: Vec<Vec<u32>> = vec![
+        vec![5, 9, 2, 8],
+        vec![9, 4, 7, 3],
+        vec![3, 8, 6, 5]];
+    assert_eq!(calculate_checksum_part2(spreadsheet), 9);
+}
+
+fn calculate_checksum_part1(spreadsheet: Vec<Vec<u32>>) -> u32 {
     let mut checksum: u32 = 0;
     for row in spreadsheet {
         let mut min: u32 = row[0];
@@ -22,6 +31,27 @@ fn calculate_checksum(spreadsheet: Vec<Vec<u32>>) -> u32 {
         checksum += row_checksum;
     }
 
+    return checksum;
+}
+
+fn calculate_row_checksum_part2(row: Vec<u32>) -> u32 {
+    for (i, number1) in row.iter().enumerate() {
+        for (j, number2) in row.iter().enumerate() {
+            if i == j { continue; }
+            if number1 % number2 == 0 {
+                return number1 / number2;
+            }
+        }
+    }
+    panic!("No divisible numbers found");
+}
+
+fn calculate_checksum_part2(spreadsheet: Vec<Vec<u32>>) -> u32 {
+    let mut checksum: u32 = 0;
+    for row in spreadsheet {
+        let row_checksum: u32 = calculate_row_checksum_part2(row);
+        checksum += row_checksum;
+    }
     return checksum;
 }
 
@@ -44,5 +74,5 @@ fn main() {
         vec![6070   ,6670   ,1885   ,1994   ,178    ,230    ,5857   ,241    ,253    ,5972   ,7219   ,252    ,806    ,6116   ,4425   ,3944],
         vec![2257   ,155    ,734    ,228    ,204    ,2180   ,175    ,2277   ,180    ,2275   ,2239   ,2331   ,2278   ,1763   ,112    ,2054],
     ];
-    println!("{}", calculate_checksum(spreadsheet));
+    println!("{}", calculate_checksum_part2(spreadsheet));
 }
