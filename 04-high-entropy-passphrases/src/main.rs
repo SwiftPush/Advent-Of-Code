@@ -1,11 +1,21 @@
 use std::collections::{HashSet, HashMap};
 use std::io::{self};
+use std::iter::FromIterator;
 
 #[test]
 fn examples_part1() {
-    assert_eq!(is_valid_line("aa bb cc dd ee"), true);
-    assert_eq!(is_valid_line("aa bb cc dd aa"), false);
-    assert_eq!(is_valid_line("aa bb cc dd aaa"), true);
+    assert_eq!(is_valid_line_part1("aa bb cc dd ee"), true);
+    assert_eq!(is_valid_line_part1("aa bb cc dd aa"), false);
+    assert_eq!(is_valid_line_part1("aa bb cc dd aaa"), true);
+}
+
+#[test]
+fn examples_part2() {
+    assert_eq!(is_valid_line_part2("abcde fghij"),  true);
+    assert_eq!(is_valid_line_part2("abcde xyz ecdab"),  false);
+    assert_eq!(is_valid_line_part2("a ab abc abd abf abj"),  true);
+    assert_eq!(is_valid_line_part2("iiii oiii ooii oooi oooo"),  true);
+    assert_eq!(is_valid_line_part2("oiii ioii iioi iiio"),  false);
 }
 
 #[test]
@@ -41,7 +51,7 @@ fn is_anagram(s1: &str, s2: &str) -> bool {
     true
 }
 
-fn is_valid_line(input: &str) -> bool {
+fn is_valid_line_part1(input: &str) -> bool {
     let mut words = HashSet::new();
     let iter = input.split_whitespace();
     for word in iter {
@@ -55,6 +65,21 @@ fn is_valid_line(input: &str) -> bool {
     true
 }
 
+fn is_valid_line_part2(input: &str) -> bool {
+    if is_valid_line_part1(input) == false { return false; }
+
+    let words = Vec::from_iter(input.split_whitespace().map(String::from));
+
+    for (i, word1) in words.iter().enumerate() {
+        for (j, word2) in words.iter().enumerate() {
+            if i == j { continue; }
+            if is_anagram(word1, word2) { return false; }
+        }
+    }
+
+    true
+}
+
 fn main() {
     let mut number_of_valid_lines: usize = 0;
     loop {
@@ -62,7 +87,7 @@ fn main() {
         io::stdin().read_line(&mut line).unwrap();
         if line.is_empty() { break; }
 
-        if is_valid_line(&line) { number_of_valid_lines += 1; }
+        if is_valid_line_part2(&line) { number_of_valid_lines += 1; }
     }
 
     println!("number_of_valid_lines={}", number_of_valid_lines);
